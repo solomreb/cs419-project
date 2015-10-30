@@ -1,6 +1,7 @@
 import curses
+from editSelectedDatabase import editSelectedDatabase
 
-def newDatabase():
+def newDatabase(username):
 	"""
 	Here we put a function call to a different file
 	that will have all the fields needed for making a new database
@@ -8,23 +9,54 @@ def newDatabase():
 	#DELETE THE LINE BELOW ONCE THE ABOVE CODE IS WRITTEN AND USER IS CORRECTLY REDIRECTED
 	curses.endwin()
 
-def editDatabase():
+def editDatabase(username):
+	screen = curses.initscr()
+	screen.clear()
+	screen.keypad(1)
 
 	"""
 	Here we query all the databases associated with this user 
-	And put all the names as options to edit
-	When a user selects the database, redirect them to a different file
-	for editing
+	And put all the names as elements of 'databases' variable
+	Also, query the count of databases and save that as 'databases_count'
 	"""
+	databases = ['name1','name2','name3','name4']
+	databases_count = 4
+	selection = -1
+	option = 0
+	y = 5 
 
-	#DELETE THE LINE BELOW ONCE THE ABOVE CODE IS WRITTEN AND USER IS CORRECTLY REDIRECTED
-	curses.endwin()
+	while selection < 0:
+		i = 0
+		choices = [0] * databases_count
+		choices[option] = curses.A_REVERSE
+		
+		#LINE 35 BELOW KEEPS THROWING ERROR 
+		for name in databases:
+			screen.addstr(y,5, name, choices[i])
+			i = i + 1
+			y = y + 3
+		
+		screen.refresh()
+
+		action = screen.getch()
+		
+		if action == curses.KEY_UP:
+			option = (option -1) % 5
+		elif action == curses.KEY_DOWN:
+			option = (option +1) % 5
+		elif action == ord('\n'):
+			selection = option
+		
+		selected_database = databases[selection]
+
+		#editSelectedDatabase(username, selected_database)
 
 def exit():
 	curses.endwin()
 
-def dashboard():
+def dashboard(username):
 	screen = curses.initscr()
+	screen.clear()
 	screen.keypad(1)
 
 	selection = -1
@@ -49,9 +81,10 @@ def dashboard():
 			selection = option
 		
 		if selection == 0:
-			newDatabase()
+			newDatabase(username)
 		elif selection == 1:
-			editDatabase()
+			editDatabase(username)
 		elif selection == 2:
 			exit()
+
 
