@@ -51,7 +51,7 @@ def editDatabase(username):
 		
 		selected_database = databases[selection]
 
-		#editSelectedDatabase(username, selected_database)
+	editSelectedDatabase(username, selected_database)
 
 def exit():
 	curses.endwin()
