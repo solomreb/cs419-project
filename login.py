@@ -1,4 +1,5 @@
 import curses
+from dashboard import dashboard
 
 screen = curses.initscr()
 screen.keypad(1)
@@ -18,13 +19,14 @@ def existingUser():
 	
 	The code for checking the entered username and password
 	against those stored in the database goes here. If it matches, send 
-	them to the database option menu, otherwise, send them back to the 
+	them to the database option menu (uncomment line below), otherwise, send them back to the 
 	main screen
 
 	"""
+	dashboard(username)
 
 	#DELETE THIS NEXT LINE, ONCE CODE ABOVE IS WRITTEN TO DIRECT THEM FROM THIS PAGE:
-	curses.endwin()
+	#curses.endwin()
 
 def newUser():
 	screen.clear()
