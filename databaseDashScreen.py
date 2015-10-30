@@ -1,4 +1,5 @@
 import curses
+from tablesOptions import tablesOptions
 
 def editSelectedDatabase(username, selected_database):
 	screen = curses.initscr()
@@ -44,6 +45,7 @@ def editSelectedDatabase(username, selected_database):
 		selected_table = tables[selection]
 
 
+	tablesOptions(username, selected_database, selected_table)
 
 
 

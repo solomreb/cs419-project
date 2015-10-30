@@ -1,20 +1,17 @@
 import curses
-from dashboard import dashboard
+#from databaseDashScreen import editSelectedDatabase
 
-def deleteTable(username, tableName):
+def deleteTable(username, database, tableName):
 	"""ENTER database query here to delete the table 
 	stored under 'tableName', associated with 'username'
 	"""
+	editSelectedDatabase(username, database, tableName)
 
-	#Return User to DatabaseDashboard Screen ??????
-	return
-
-def dont_deleteTable(username, tableName):
-	#Return User to DatabaseDashboard Screen ??????
-	return
+def dont_deleteTable(username, database, tableName):
+	editSelectedDatabase(username, database, tableName)
 
 
-def deleteTableMenu(username, tableName):
+def deleteTableMenu(username, database, tableName):
 	#FOR TESTING:
 	tableName = 'table1'
 
@@ -44,8 +41,7 @@ def deleteTableMenu(username, tableName):
 			selection = option
 		
 		if selection == 0:
-			deleteTable(username, tableName)
+			deleteTable(username, database, tableName)
 		elif selection == 1:
-			dont_deleteTable(username, tableName)
+			dont_deleteTable(username, database, tableName)
 
-deleteTableMenu('allie', 'table')
