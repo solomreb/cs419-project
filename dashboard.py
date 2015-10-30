@@ -1,5 +1,5 @@
 import curses
-from editSelectedDatabase import editSelectedDatabase
+from databaseDashScreen import editSelectedDatabase
 
 def newDatabase(username):
 	"""
@@ -14,6 +14,8 @@ def editDatabase(username):
 	screen.clear()
 	screen.keypad(1)
 
+	screen.addstr(3, 5, 'Choose a database to edit/view',curses.A_BOLD|curses.A_UNDERLINE)
+
 	"""
 	Here we query all the databases associated with this user 
 	And put all the names as elements of 'databases' variable
@@ -23,14 +25,14 @@ def editDatabase(username):
 	databases_count = 4
 	selection = -1
 	option = 0
-	y = 5 
 
 	while selection < 0:
+		y = 5 
 		i = 0
 		choices = [0] * databases_count
 		choices[option] = curses.A_REVERSE
 		
-		#LINE 35 BELOW KEEPS THROWING ERROR 
+		#LINE 37 BELOW KEEPS THROWING ERROR 
 		for name in databases:
 			screen.addstr(y,5, name, choices[i])
 			i = i + 1
@@ -66,7 +68,7 @@ def dashboard(username):
 		choices[option] = curses.A_REVERSE
 		screen.addstr(5,5, 'WELCOME! WHAT WOULD YOU LIKE TO DO?', curses.A_BOLD|curses.A_UNDERLINE)
 		screen.addstr(8,5, 'Create New Database', choices[0])
-		screen.addstr(11,5, 'Edit Existing Database', choices[1])
+		screen.addstr(11,5, 'Edit/View Existing Database', choices[1])
 		screen.addstr(14,5, 'Exit', choices[2])
 
 		screen.refresh()
