@@ -1,75 +1,48 @@
 import curses
+import curses.textpad
 
 screen = curses.initscr()
 screen.keypad(1)
 
-def initCurses(title):
+def get_input(prompt):
 	screen.clear()
-	screen.keypad(1)
-	#curses.cbreak()
+	screen.border(0)
+	screen.addstr(2, 2, prompt)
+	screen.refresh()
+	input = screen.getstr(10, 10, 60)
+	return input
 
+def newUser():
+	screen.clear()
 
-	#Top Title Bar
-	screen.addstr("DATABASE VIEWER", curses.A_BOLD)
-	screen.addstr(0, curses.COLS - len(title), title, curses.A_BOLD)
+	screen.addstr(5,5, 'Enter Username:')
+	screen.addstr(8,5, 'Enter Password:')
 
+	curses.echo()
+	username = screen.getstr(6,5,15)
+	curses.noecho()
+	password = screen.getstr(9,5,15)
 
-	#Bottom Info Bar
-	screen.addstr(curses.LINES-1, 0, "Use up and down arrow keys to navigate. 'Enter' to select. 'Q' to quit")
-
-	#Window title
+	"""
 	
-	#Create window
-	window = curses.newwin(curses.LINES-2, curses.COLS, 1, 0)
+	The code for storing the entered username and password
+	into the database goes here. 
 
-	return window
+	"""
 
-def choice1():
-	win = initCurses("Choice 1")
+	menu()
 
-def choice2():
-	win = initCurses("Choice 2")
 
 def exit():
-	#Restore the terminal settings
-	curses.nocbreak()
-	curses.echo()
-
 	curses.endwin()
 
+
 def menu():
-
-#	win = initCurses("CREATE TABLE")
-
-	screen.refresh()
-	selection = -1
-	option = 0
-	while selection < 0:
-		choices = [0]*3
-		choices[option] = curses.A_REVERSE
-
-		screen.addstr(8,5, 'Choice 1', choices[0])
-		screen.addstr(11,5, 'Choice 2', choices[1])
-		screen.addstr(14,5, 'Exit', choices[2])
+	screen.clear()
+	win = curses.newwin(1, 6, 6, 5)
+	win.box()
+	#win.addstr(8,5, 'Table Name', choices[0])
+	win.refresh()
 		
-		screen.refresh()
-
-		action = screen.getch()
-		
-		if action == curses.KEY_UP:
-			option = (option -1) % 4
-		elif action == curses.KEY_DOWN:
-			option = (option +1) % 4
-		elif action == ord('\n'):
-			selection = option
-		elif action == ord('q') or action == ord('Q'):
-			exit()
-		
-		if selection == 0:
-			choice1()
-		elif selection == 1:
-			choice2()
-		elif selection == 2:
-			exit()
 
 menu()
