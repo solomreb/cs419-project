@@ -1,6 +1,12 @@
 import curses
 from databaseDashScreen import editSelectedDatabase
 
+#User is taken here if they would like to create a new database
+#It is passed the username, so that the database can be associated
+#with the particular user
+#THIS STILL NEEDS TO BE WRITTEN
+#User will be taken from here to a screen that displays the screens
+#to create a database
 def newDatabase(username):
 	"""
 	Here we put a function call to a different file
@@ -9,6 +15,12 @@ def newDatabase(username):
 	#DELETE THE LINE BELOW ONCE THE ABOVE CODE IS WRITTEN AND USER IS CORRECTLY REDIRECTED
 	curses.endwin()
 
+#User is taken here if they would like to edit an existing database
+#All of the databases that are associated with the user's username
+#Are displayed, and the user can scroll through the pick the database
+#they would like to edit
+#The database that they select is sent to databaseDashScreen.py editSelectedDatabase()
+#the username and database name are sent
 def editDatabase(username):
 	screen = curses.initscr()
 	screen.clear()
@@ -53,9 +65,13 @@ def editDatabase(username):
 
 	editSelectedDatabase(username, selected_database)
 
+#If a user chooses to exit, the program is terminated
 def exit():
 	curses.endwin()
 
+#Once a user is logged in, they are shown this screen
+#It displays the options for them to do in regards to databases:
+#create a new database or edit/view existing databases (or exit)
 def dashboard(username):
 	screen = curses.initscr()
 	screen.clear()

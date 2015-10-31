@@ -4,6 +4,11 @@ from dashboard import dashboard
 screen = curses.initscr()
 screen.keypad(1)
 
+#User is directed here if they choose that they are an existing user
+#In this function, user enters a password and user name
+#And these are validated through calls to the database.
+#If they are acceptable, they enter the database viewer, if they are not,
+#They are returned to the main menu
 def existingUser():
 	screen.clear()
 
@@ -28,6 +33,10 @@ def existingUser():
 	#DELETE THIS NEXT LINE, ONCE CODE ABOVE IS WRITTEN TO DIRECT THEM FROM THIS PAGE:
 	#curses.endwin()
 
+#User is directed here if they selected that they are a new user to this system
+#Here, they enter a username and password
+#Those are stored in the database
+#User is then redirected back to the main login page to login as an existing user
 def newUser():
 	screen.clear()
 
@@ -48,11 +57,14 @@ def newUser():
 
 	menu()
 
-
+#If user chooses to exit the program, this is called, and it closes the program
+#And returns user to the terminal
 def exit():
 	curses.endwin()
 
-
+#This is the first thing that is displayed to the user
+#The options that the user can choose are in regards to logging in
+#The are: existing user, new user, and exit
 def menu():
 	screen.clear()
 	selection = -1

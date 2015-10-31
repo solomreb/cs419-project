@@ -1,6 +1,11 @@
 import curses
 from tablesOptions import tablesOptions
 
+#This is a poorly named function
+#User is brought here if they selected that they wanted to edit an existing database
+#It pulls all the tables that are in that database and that are associated the username
+#User then selected a table from that list 
+#This table, the username, and database is sent to tableOptions.py tableOptions()
 def editSelectedDatabase(username, selected_database):
 	screen = curses.initscr()
 	screen.clear()

@@ -1,6 +1,11 @@
 import curses
 from deleteTable import deleteTableMenu
 
+#User is sent here once they select a table to view/edit
+#This displays the options they can do with the table they have selected:
+#View / Edit Structure / Insert / Drop
+#THE CORRECT PAGES NEED TO BE IMPORTED TO THIS PAGE
+#RIGHT NOW, ONLY DELETETABLE WORKS
 def tablesOptions(username, database, table):
 	screen = curses.initscr()
 	screen.clear()
