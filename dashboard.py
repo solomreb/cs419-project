@@ -92,9 +92,9 @@ def dashboard(username):
 		action = screen.getch()
 		
 		if action == curses.KEY_UP:
-			option = (option -1) % 5
+			option = (option -1) % 3
 		elif action == curses.KEY_DOWN:
-			option = (option +1) % 5
+			option = (option +1) % 3
 		elif action == ord('\n'):
 			selection = option
 		

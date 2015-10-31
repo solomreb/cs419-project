@@ -45,9 +45,9 @@ def deleteTableMenu(username, database, tableName):
 		action = screen.getch()
 		
 		if action == curses.KEY_UP:
-			option = (option -1) % 5
+			option = (option -1) % 2
 		elif action == curses.KEY_DOWN:
-			option = (option +1) % 5
+			option = (option +1) % 2
 		elif action == ord('\n'):
 			selection = option
 		

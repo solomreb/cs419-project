@@ -28,9 +28,9 @@ def tablesOptions(username, database, table):
 		action = screen.getch()
 		
 		if action == curses.KEY_UP:
-			option = (option -1) % 5
+			option = (option -1) % 4
 		elif action == curses.KEY_DOWN:
-			option = (option +1) % 5
+			option = (option +1) % 4
 		elif action == ord('\n'):
 			selection = option
 		
