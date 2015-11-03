@@ -1,53 +1,46 @@
-from peewee import *
-
-database = SqliteDatabase("cs419.db")
-
-
-def before_request_handler():
-    database.connect()
-
-
-def after_request_handler():
-    database.close()
-
-
-class BaseModel(Model):
-    class Meta:
-        database = database
-
-
-class User(BaseModel):
-    username = CharField(max_length=100, unique=True)
-    password = CharField(max_length=100)
-
+from model_user import UserModel
+from model_database import DatabaseModel
+from peewee import IntegrityError
 
 if __name__ == "__main__":
-    try:
-        User.create_table()
-    except OperationalError:
-        print "User table already exists!"
-
     users = [
         {
             'username': 'allie',
-            'password': 'test1'
+            'password': 'test1',
+            'database_name': 'allie db',
+            'tables': [
+
+            ]
         },
         {
             'username': 'becky',
-            'password': 'test2'
+            'password': 'test2',
+            'database_name': 'becky db',
+            'tables': [
+
+            ]
         },
         {
             'username': 'lynda',
-            'password': 'test3'
+            'password': 'test3',
+            'database_name': 'lynda db',
+            'tables': [
+
+            ]
         },
         {
             'username': 'test',
-            'password': 'test'
+            'password': 'test',
+            'database_name': 'test db',
+            'tables': [
+
+            ]
         },
     ]
 
     for user in users:
         try:
-            User.create(username=user['username'], password=user['password'])
+            user_created = UserModel.create(username=user['username'], password=user['password'])
+            database = DatabaseModel.create(user=user_created, name=user['database_name'])
         except IntegrityError:
             print "User already exists!"
