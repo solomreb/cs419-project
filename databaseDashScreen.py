@@ -1,12 +1,17 @@
 import curses
 from tablesOptions import tablesOptions
+from createTable import createNewTable
+
+"""
+THIS PAGE JUST NEEDS THE DATABASE FUNCTIONALITY
+"""
 
 #This is a poorly named function
 #User is brought here if they selected that they wanted to edit an existing database
 #It pulls all the tables that are in that database and that are associated the username
 #User then selected a table from that list 
 #This table, the username, and database is sent to tableOptions.py tableOptions()
-def editSelectedDatabase(username, selected_database):
+def editViewTablesList(username, selected_database):
 	screen = curses.initscr()
 	screen.clear()
 	screen.keypad(1)
@@ -30,7 +35,7 @@ def editSelectedDatabase(username, selected_database):
 		choices = [0] * tables_count
 		choices[option] = curses.A_REVERSE
 		
-		#LINE 35 BELOW KEEPS THROWING ERROR 
+		
 		for name in tables:
 			screen.addstr(y,5, name, choices[i])
 			i = i + 1
@@ -53,6 +58,35 @@ def editSelectedDatabase(username, selected_database):
 	tablesOptions(username, selected_database, selected_table)
 
 
+def editSelectedDatabase(username, selected_database):
+	screen = curses.initscr()
+	screen.clear()
+	screen.keypad(1)
 
+	selection = -1
+	option = 0
+	while selection < 0:
+		choices = [0]*2
+		choices[option] = curses.A_REVERSE
+		screen.addstr(5,5, 'What would you like to do in this database?', curses.A_BOLD|curses.A_UNDERLINE)
+		screen.addstr(8,5, 'Edit/View an Existing Table', choices[0])
+		screen.addstr(11,5, 'Create a New Table', choices[1])
+
+		screen.refresh()
+		
+		action = screen.getch()
+		
+		if action == curses.KEY_UP:
+			option = (option -1) % 2
+		elif action == curses.KEY_DOWN:
+			option = (option +1) % 2
+		elif action == ord('\n'):
+			selection = option
+		
+		if selection == 0:
+			editViewTablesList(username, selected_database)
+		elif selection == 1:
+			createNewTable(username, selected_database)
+		
 
 

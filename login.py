@@ -1,5 +1,9 @@
 import curses
 from dashboard import dashboard
+"""
+THIS PAGE JUST NEEDS THE DATABASE FUNCTIONALITY
+"""
+
 
 screen = curses.initscr()
 screen.keypad(1)

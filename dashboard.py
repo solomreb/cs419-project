@@ -1,6 +1,10 @@
 import curses
 from databaseDashScreen import editSelectedDatabase
 
+"""
+THIS PAGE JUST NEEDS THE DATABASE FUNCTIONALITY
+"""
+
 #User is taken here if they would like to create a new database
 #It is passed the username, so that the database can be associated
 #with the particular user
@@ -8,12 +12,21 @@ from databaseDashScreen import editSelectedDatabase
 #User will be taken from here to a screen that displays the screens
 #to create a database
 def newDatabase(username):
+	
+	screen = curses.initscr()
+
+	screen.clear()
+	screen.addstr(5,5, 'Enter Database Name:')
+
+	curses.echo()
+	newDatabaseName = screen.getstr(6,5,15)
+
 	"""
-	Here we put a function call to a different file
-	that will have all the fields needed for making a new database
+	Here we enter the new database name into the database
+	and ensure that it is tied to the user
 	"""
-	#DELETE THE LINE BELOW ONCE THE ABOVE CODE IS WRITTEN AND USER IS CORRECTLY REDIRECTED
-	curses.endwin()
+
+	editSelectedDatabase(username, newDatabaseName)	
 
 #User is taken here if they would like to edit an existing database
 #All of the databases that are associated with the user's username

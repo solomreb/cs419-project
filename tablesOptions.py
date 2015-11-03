@@ -1,5 +1,6 @@
 import curses
 from deleteTable import deleteTableMenu
+from viewTable import viewTable
 
 #User is sent here once they select a table to view/edit
 #This displays the options they can do with the table they have selected:
