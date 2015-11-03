@@ -11,7 +11,9 @@
     * create the table with just the name first CREATE TABLE table_name
     * then, create the columns using the ALTER TABLE command each time a column is entered? (http://www.techonthenet.com/sql/tables/alter_table.php)
 * Circular dependencies that need to be fixed
+	*Lynda might have fixed this!
 * constants / constraints
     * Maybe we set a max number of columns?
     * Maybe we don't allow users to edit structure (yet)
         * if we have time, we can add this functionality, but for now it could just be, what you've set up is what you get??
+    *Instead of edit structure, maybe "query table", in which user can enter their own query?
