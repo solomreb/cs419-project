@@ -19,20 +19,21 @@ def database_menu(user):
     option = 0
 
     while selection < 0:
-        choices = [0] * 3
+        choices = [0] * 4
         choices[option] = curses.A_REVERSE
         screen.addstr(5, 5, 'WELCOME! WHAT WOULD YOU LIKE TO DO?', curses.A_BOLD | curses.A_UNDERLINE)
         screen.addstr(8, 5, 'Create New Database', choices[0])
         screen.addstr(11, 5, 'Edit/View Existing Database', choices[1])
-        screen.addstr(14, 5, 'Exit', choices[2])
+        screen.addstr(14, 5, 'Delete an Existing Database', choices[2])
+        screen.addstr(17, 5, 'Exit', choices[3])
 
         screen.refresh()
         action = screen.getch()
 
         if action == curses.KEY_UP:
-            option = (option - 1) % 3
+            option = (option - 1) % 4
         elif action == curses.KEY_DOWN:
-            option = (option + 1) % 3
+            option = (option + 1) % 4
         elif action == ord('\n'):
             selection = option
 
@@ -40,7 +41,9 @@ def database_menu(user):
             new_database_view(user)
         elif selection == 1:
             edit_database(user)
-        elif selection == 2:
+        elif selection ==2:
+            delete_database(user)
+        elif selection == 3:
             dashboard_program.end_program()
 
 
@@ -191,7 +194,6 @@ def edit_database(user):
         choices = [0] * databases_count
         choices[option] = curses.A_REVERSE
 
-        # LINE 37 BELOW KEEPS THROWING ERROR
         for name in databases:
             screen.addstr(y, 5, name, choices[i])
             i += 1
@@ -211,6 +213,84 @@ def edit_database(user):
         selected_database = databases[selection]
 
     edit_selected_database_menu(database)
+
+
+def delete_database(user):
+    """User is brought here if they have chosen to delete a database.
+    First, all databases are shown, and then the user selects one to delete.
+    The user is asked to verify they would like to delete the database."""
+
+    screen = curses.initscr()
+    screen.clear()
+    screen.keypad(1)
+
+    screen.addstr(3, 5, 'Choose a database to delete', curses.A_BOLD | curses.A_UNDERLINE)
+
+    """
+    Here we query all the databases associated with this user
+    And put all the names as elements of 'databases' variable
+    Also, query the count of databases and save that as 'databases_count'
+    """
+    databases = ['name1', 'name2', 'name3', 'name4']
+    databases_count = 4
+    selection = -1
+    option = 0
+
+    selected_database = None
+
+    while selection < 0:
+        y = 5
+        i = 0
+        choices = [0] * databases_count
+        choices[option] = curses.A_REVERSE
+
+        for name in databases:
+            screen.addstr(y, 5, name, choices[i])
+            i += 1
+            y += 3
+
+        screen.refresh()
+
+        action = screen.getch()
+
+        if action == curses.KEY_UP:
+            option = (option - 1) % databases_count
+        elif action == curses.KEY_DOWN:
+            option = (option + 1) % databases_count
+        elif action == ord('\n'):
+            selection = option
+
+        selected_database = databases[selection]
+
+    screen.clear()
+
+    selection = -1
+    option = 0
+    while selection < 0:
+        choices = [0] * 2
+        choices[option] = curses.A_REVERSE
+        screen.addstr(5, 5, 'Are you sure you want to delete this database?', curses.A_BOLD | curses.A_UNDERLINE)
+        screen.addstr(8, 5, selected_database, curses.A_BOLD)
+        screen.addstr(11, 5, 'Yes', choices[0])
+        screen.addstr(14, 5, 'No', choices[1])
+
+        screen.refresh()
+
+        action = screen.getch()
+
+        if action == curses.KEY_UP:
+            option = (option - 1) % 2
+        elif action == curses.KEY_DOWN:
+            option = (option + 1) % 2
+        elif action == ord('\n'):
+            selection = option
+
+        if selection == 0:
+            """Database query goes here to delete the database"""
+            database_menu(user)
+        elif selection == 1:
+            database_menu(user)
+
 
 
 def create_new_table(username, selected_database):
