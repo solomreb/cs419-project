@@ -144,7 +144,60 @@ def insert_table(username, database, table):
     """
     screen = curses.initscr()
     screen.clear()
-    screen.addstr(6, 5, "THIS NEEDS TO BE DONE", curses.A_BOLD)
+    screen.addstr(1, 5, "Insert Values For New Row:", curses.A_BOLD|curses.A_UNDERLINE)
+    screen.refresh()
+
+    new_row_data = {} #going to hold the new row data user enters
+
+    """Here we run a query against the table listed in the parameter
+    to find all the column names, See TO-DO file for information
+    on these database queries"""
+    #for testing, this is hard-coded
+    columns = ['col1', 'col2', 'col3','col4']
+    
+    y = 3 #starting x value
+
+    for name in columns:
+        screen.addstr(y, 3, name+":", curses.A_BOLD)
+        #Get response
+        curses.echo()
+        response = screen.getstr(y+1, 3, 15)
+        #Put response in dictionary
+        new_row_data[name] = response
+        y += 2
+    screen.refresh()
+    
+    #for testing: passed
+    #screen.clear()
+    #x=1
+    #y=1
+    #for key, val in new_row_data.items():
+    #    screen.addstr(y,x, key+": ")
+    #    screen.addstr(y, x+10, val)
+    #    x=1
+    #    y+=2
+
+    """Here run the query to enter the key, val, into the table
+    specified in the parameter if query is successful, display
+    success window, else, display fail
+    http://stackoverflow.com/questions/11918797/how-to-check-if-a-mysql-query-was-successful"""
+
+    """Here is what the python will look like once a variable has been set to
+        the returned sucess of the query:
+    if (success):
+        screen.clear()
+        screen.addstr(5,5, "Insert successful")
+        screen.addstr(7,5, "Press any button to return to the table menu")
+        screen.getch()
+        table_menu(username, database,table)
+    else:
+        screen.clear()
+        screen.addstr(5,5, "Insert unsuccessful")
+        screen.addstr(7,5, "Press any button to try again")
+        screen.getch()
+        insert_table(username, database,table)
+    """
+
     screen.refresh()
 
 
@@ -201,6 +254,8 @@ def query_table(username, database, table):
             x += 10
         y += 1 #move to next line
         x = 1 #reset x
+
+    """THIS PAGE JUST NEEDS TO ALLOW PAGINATION"""
 
     screen.refresh()
 
