@@ -1,6 +1,15 @@
 Vagrant.configure(2) do |config|
   config.vm.box = "ubuntu/trusty64"
 
+  config.vm.provider :virtualbox do |vb|
+    # use for debugging the vm
+    # vb.gui = true
+
+    # speed up networking
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+  end
+
   config.vm.provision "shell", inline: <<-SHELL
     sudo apt-get update
     sudo apt-get install -y python-software-properties
@@ -26,5 +35,3 @@ Vagrant.configure(2) do |config|
     group: "admin",
     mount_options: ["dmode=775,fmode=664"]
 end
-
-
