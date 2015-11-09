@@ -144,34 +144,34 @@ def insert_table(username, database, table):
     """
     screen = curses.initscr()
     screen.clear()
-    screen.addstr(1, 5, "Insert Values For New Row:", curses.A_BOLD|curses.A_UNDERLINE)
+    screen.addstr(1, 5, "Insert Values For New Row:", curses.A_BOLD | curses.A_UNDERLINE)
     screen.refresh()
 
-    new_row_data = {} #going to hold the new row data user enters
+    new_row_data = {}  # going to hold the new row data user enters
 
     """Here we run a query against the table listed in the parameter
     to find all the column names, See TO-DO file for information
     on these database queries"""
-    #for testing, this is hard-coded
-    columns = ['col1', 'col2', 'col3','col4']
-    
-    y = 3 #starting x value
+    # for testing, this is hard-coded
+    columns = ['col1', 'col2', 'col3', 'col4']
+
+    y = 3  # starting x value
 
     for name in columns:
-        screen.addstr(y, 3, name+":", curses.A_BOLD)
-        #Get response
+        screen.addstr(y, 3, name + ":", curses.A_BOLD)
+        # Get response
         curses.echo()
-        response = screen.getstr(y+1, 3, 15)
-        #Put response in dictionary
+        response = screen.getstr(y + 1, 3, 15)
+        # Put response in dictionary
         new_row_data[name] = response
         y += 2
     screen.refresh()
-    
-    #for testing: passed
-    #screen.clear()
-    #x=1
-    #y=1
-    #for key, val in new_row_data.items():
+
+    # for testing: passed
+    # screen.clear()
+    # x=1
+    # y=1
+    # for key, val in new_row_data.items():
     #    screen.addstr(y,x, key+": ")
     #    screen.addstr(y, x+10, val)
     #    x=1
@@ -209,29 +209,29 @@ def query_table(username, database, table):
     :return:
     """
 
-    #Get the query
+    # Get the query
     screen = curses.initscr()
     screen.clear()
     screen.addstr(5, 5, "Enter your query line:", curses.A_BOLD)
     screen.refresh()
-    
-    #IS 50 CHARS LONG ENOUGH FOR A QUERY???????????????????????????????
+
+    # IS 50 CHARS LONG ENOUGH FOR A QUERY???????????????????????????????
     query = screen.getstr(6, 5, 50)
 
-    #run the query
+    # run the query
     """RUN THIS QUERY TO THE TABLE"""
 
-    #Display results
+    # Display results
     screen.clear()
-    screen.addstr(1,1, "Results:", curses.A_BOLD)
-    
+    screen.addstr(1, 1, "Results:", curses.A_BOLD)
+
     """Here we run a query against the table listed in the parameter
     to find all the column names, See TO-DO file for information
     on these database queries"""
-    #for testing, this is hard-coded
-    columns = ['col1', 'col2', 'col3','col4']
-    
-    x = 1 #starting x value
+    # for testing, this is hard-coded
+    columns = ['col1', 'col2', 'col3', 'col4']
+
+    x = 1  # starting x value
 
     for name in columns:
         screen.addstr(3, x, name)
@@ -239,26 +239,21 @@ def query_table(username, database, table):
 
     screen.refresh()
 
-
     """Here we run the query that the user entered, stored in the
     variable 'query', and store the results of the query into 'rows'"""
-    #run the query
-    #for testing, the results are hardcoded
-    rows = [['Bob', '9123 4567','home','A'], ['Janet', '8888 8888', 'cell', 'B']]
-    y = 5 #starting y
-    x=1 #starting x
+    # run the query
+    # for testing, the results are hardcoded
+    rows = [['Bob', '9123 4567', 'home', 'A'], ['Janet', '8888 8888', 'cell', 'B']]
+    y = 5  # starting y
+    x = 1  # starting x
 
     for row in rows:
         for result in row:
             screen.addstr(y, x, result)
             x += 10
-        y += 1 #move to next line
-        x = 1 #reset x
+        y += 1  # move to next line
+        x = 1  # reset x
 
     """THIS PAGE JUST NEEDS TO ALLOW PAGINATION"""
 
     screen.refresh()
-
-
-
-

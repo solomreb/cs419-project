@@ -41,7 +41,7 @@ def database_menu(user):
             new_database_view(user)
         elif selection == 1:
             edit_database(user)
-        elif selection ==2:
+        elif selection == 2:
             delete_database(user)
         elif selection == 3:
             dashboard_program.end_program()
@@ -290,7 +290,6 @@ def delete_database(user):
             database_menu(user)
         elif selection == 1:
             database_menu(user)
-
 
 
 def create_new_table(username, selected_database):

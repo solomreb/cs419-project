@@ -1,6 +1,6 @@
-from peewee import Model, SqliteDatabase
+from peewee import Model, PostgresqlDatabase
 
-database = SqliteDatabase("cs419.db")
+database = PostgresqlDatabase('cs419', user='vagrant')
 
 
 def before_request_handler():
