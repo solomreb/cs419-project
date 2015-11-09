@@ -9,7 +9,7 @@
 
 ```bash
 $ cd cs419-project
-$ vagrant start
+$ vagrant up
 $ vagrant ssh
 ```
 
