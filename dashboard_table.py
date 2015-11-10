@@ -63,7 +63,7 @@ def delete_table(username, database, table_name):
     :param table_name:
     :return:
     """
-    dashboard_database.edit_selected_database_menu(username, database, table_name)
+    dashboard_database.edit_selected_database_menu(None, username)
 
 
 def dont_delete_table(username, database, table_name):

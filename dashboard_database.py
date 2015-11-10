@@ -1,5 +1,6 @@
 import curses
 import dashboard_program
+from dashboard_table import table_menu
 from utility_database import add_database
 
 
@@ -65,12 +66,12 @@ def new_database_view(user):
     curses.echo()
     database_name = screen.getstr(6, 5, 15)
 
-    database = add_database(user, database_name)
+    new_database = add_database(user, database_name)
 
-    edit_selected_database_menu(database)
+    edit_selected_database_menu(user, new_database)
 
 
-def edit_selected_database_menu(database):
+def edit_selected_database_menu(user, database):
     screen = curses.initscr()
     screen.clear()
     screen.keypad(1)
@@ -97,12 +98,12 @@ def edit_selected_database_menu(database):
             selection = option
 
         if selection == 0:
-            edit_table_view_selected_database(database)
+            edit_table_view_selected_database(user, database)
         elif selection == 1:
-            create_new_table(database)
+            create_new_table(user, database)
 
 
-def edit_table_view_selected_database(database):
+def edit_table_view_selected_database(user, database):
     """
     This is a poorly named function
     User is brought here if they selected that they wanted to edit an existing database
@@ -156,7 +157,7 @@ def edit_table_view_selected_database(database):
 
         selected_table = tables[selection]
 
-    table_dashboard(username, selected_database, selected_table)
+    table_menu(user, database, selected_table)
 
 
 def edit_database(user):
@@ -212,7 +213,7 @@ def edit_database(user):
 
         selected_database = databases[selection]
 
-    edit_selected_database_menu(database)
+    edit_selected_database_menu(user, selected_database)
 
 
 def delete_database(user):
@@ -350,7 +351,7 @@ def create_columns(username, selected_database, table):
     screen.addstr(17, 5, 'Do you have more columns to add? Enter Y or N: ')
     response = screen.getch()
 
-    if response == ord('y'):
+    if response == ord('y') or response == ord('Y'):
         create_columns(username, selected_database, table)
-    if response == ord('n'):
+    if response == ord('n') or response == ord('N'):
         table_menu(username, selected_database, table)
