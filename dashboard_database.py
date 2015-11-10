@@ -205,9 +205,9 @@ def edit_database(user):
         action = screen.getch()
 
         if action == curses.KEY_UP:
-            option = (option - 1) % 5
+            option = (option - 1) % databases_count
         elif action == curses.KEY_DOWN:
-            option = (option + 1) % 5
+            option = (option + 1) % databases_count
         elif action == ord('\n'):
             selection = option
 
