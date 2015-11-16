@@ -131,8 +131,47 @@ def view_table(username, database, table):
     """
     screen = curses.initscr()
     screen.clear()
-    screen.addstr(6, 5, "THIS NEEDS TO BE DONE", curses.A_BOLD)
-    screen.refresh()
+    screen.keypad(1)
+
+    selection = -1
+    option = 0
+
+    while selection < 0:
+        choices = [0] * 1
+        choices[option] = curses.A_REVERSE
+        screen.addstr(1, 5, 'Go back to table menu', choices[0])
+        screen.addstr(3, 5, table, curses.A_BOLD | curses.A_UNDERLINE)
+
+         # for testing, the results are hardcoded
+        rows = [['Bob', '9123 4567', 'home', 'A'], ['Janet', '3453 8828', 'cell', 'B'],
+                ['Joe', '1234 0982', 'home', 'A'], ['Kate', '0298 5233', 'cell', 'B'],
+                ['Susan', '2345 2340', 'home', 'A'], ['Carrie', '2350 3463', 'cell', 'B'],
+                ['Jose', '9123 4567', 'home', 'A'], ['Brian', '5552 3222', 'cell', 'B']]
+        y = 4  # starting y
+        x = 2  # starting x
+
+        for row in rows:
+            for result in row:
+                screen.addstr(y, x, result)
+                x += 15
+            y += 1  # move to next line
+            x = 2  # reset x
+
+        screen.refresh()
+
+        action = screen.getch()
+
+        if action == curses.KEY_UP:
+            option = (option - 1) % 2
+        elif action == curses.KEY_DOWN:
+            option = (option + 1) % 2
+        elif action == ord('\n'):
+            selection = option
+
+        if selection == 0:
+            table_menu(username, database, table)
+
+
 
 
 def insert_table(username, database, table):
@@ -183,7 +222,7 @@ def insert_table(username, database, table):
     http://stackoverflow.com/questions/11918797/how-to-check-if-a-mysql-query-was-successful"""
 
     """Here is what the python will look like once a variable has been set to
-        the returned sucess of the query:
+        the returned success of the query:
     if (success):
         screen.clear()
         screen.addstr(5,5, "Insert successful")
@@ -221,6 +260,13 @@ def query_table(username, database, table):
     # run the query
     """RUN THIS QUERY TO THE TABLE"""
 
+    cursor = database.connect()
+
+    """
+    cursor.execute(query)
+        results = cursor.fetchall()
+        """
+
     # Display results
     screen.clear()
     screen.addstr(1, 1, "Results:", curses.A_BOLD)
@@ -247,6 +293,12 @@ def query_table(username, database, table):
     y = 5  # starting y
     x = 1  # starting x
 
+
+    """
+    for row in table.select().paginate(1, 10):
+        print tweet.message
+        """
+
     for row in rows:
         for result in row:
             screen.addstr(y, x, result)
@@ -255,5 +307,6 @@ def query_table(username, database, table):
         x = 1  # reset x
 
     """THIS PAGE JUST NEEDS TO ALLOW PAGINATION"""
+
 
     screen.refresh()
