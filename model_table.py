@@ -1,10 +1,10 @@
 import datetime
 from peewee import CharField, DateTimeField, ForeignKeyField
-from model_base import BaseModel
+from model_base import PostgresqlModel
 from model_database import DatabaseModel
 
 
-class TableModel(BaseModel):
+class TableModel(PostgresqlModel):
     class Meta:
         db_table = 'tables'
 

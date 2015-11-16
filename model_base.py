@@ -1,6 +1,6 @@
 from peewee import Model, PostgresqlDatabase
 
-database = PostgresqlDatabase('cs419', user='vagrant')
+psql_db = PostgresqlDatabase('cs419', user='vagrant')
 
 
 def before_request_handler():
@@ -11,6 +11,6 @@ def after_request_handler():
     database.close()
 
 
-class BaseModel(Model):
+class PostgresqlModel(Model):
     class Meta:
-        database = database
+        database = psql_db
