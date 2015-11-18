@@ -13,6 +13,16 @@
 * constants / constraints
 	* Maybe we set a max number of columns?
 
+(Becky)
+* validate user input
+    *username
+    *password
+    *database names
+    *table names
+    *field names
+    *field types
+    *field null
+    *field primary key
 
 
 Queries for Viewing table:

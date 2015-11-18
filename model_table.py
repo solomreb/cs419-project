@@ -1,13 +1,19 @@
 import datetime
-from peewee import CharField, DateTimeField, ForeignKeyField
-from model_base import PostgresqlModel
-from model_database import DatabaseModel
+from peewee import CharField, DateTimeField
+from model_base import PostgresqlModel, AdminModel
 
 
 class TableModel(PostgresqlModel):
     class Meta:
         db_table = 'tables'
 
-    database = ForeignKeyField(DatabaseModel, related_name='tables')
+    user = CharField()
+    name = CharField()
+    created_date = DateTimeField(default=datetime.datetime.now)
+
+class AdminTableModel(AdminModel):
+    class Meta:
+        db_table = 'tables'
+
     name = CharField()
     created_date = DateTimeField(default=datetime.datetime.now)

@@ -1,5 +1,4 @@
 from model_column import ColumnModel
-from model_database import DatabaseModel
 from model_table import TableModel
 from model_user import UserModel
 from peewee import PostgresqlDatabase
@@ -10,7 +9,6 @@ if __name__ == "__main__":
     tables = [
         ColumnModel,
         TableModel,
-        DatabaseModel,
         UserModel
     ]
 

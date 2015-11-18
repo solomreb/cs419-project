@@ -1,7 +1,9 @@
 import curses
 import dashboard_program
 from dashboard_table import table_menu
-from utility_database import add_database
+from utility_database import add_database, connect_to_db
+import time
+from model_base import *
 
 
 def database_menu(user):
@@ -66,9 +68,18 @@ def new_database_view(user):
     curses.echo()
     database_name = screen.getstr(6, 5, 15)
 
-    new_database = add_database(user, database_name)
+    created = add_database(user, database_name)
 
-    edit_selected_database_menu(user, new_database)
+    if created:
+        screen.addstr(8, 5, 'Database ' + database_name + ' created!...', curses.COLOR_GREEN)
+        screen.refresh()
+        time.sleep(2)
+        edit_selected_database_menu(user, database_name)
+    else:
+        screen.addstr(8, 5, 'That database name already exists. Refreshing screen...', curses.COLOR_RED)
+        screen.refresh()
+        time.sleep(2)
+        new_database_view(user)
 
 
 def edit_selected_database_menu(user, database):
@@ -82,6 +93,7 @@ def edit_selected_database_menu(user, database):
     while selection < 0:
         choices = [0] * 2
         choices[option] = curses.A_REVERSE
+        screen.addstr(3, 5, 'DATABASE: ' + database, curses.A_BOLD | curses.A_UNDERLINE)
         screen.addstr(5, 5, 'What would you like to do in this database?', curses.A_BOLD | curses.A_UNDERLINE)
         screen.addstr(8, 5, 'Edit/View an Existing Table', choices[0])
         screen.addstr(11, 5, 'Create a New Table', choices[1])
@@ -184,6 +196,15 @@ def edit_database(user):
     """
     databases = ['name1', 'name2', 'name3', 'name4']
     databases_count = 4
+
+    #connect to default database
+    conn = connect_to_db('postgres', 'postgres')
+    cursor = conn.cursor()
+
+    # retreive database names for selected user
+    find_query = "SELECT 1 FROM pg_database WHERE datname = \'%s\'" % (database_name)
+    cursor.execute(find_query)
+
     selection = -1
     option = 0
 
@@ -307,7 +328,9 @@ def create_new_table(username, selected_database):
     table_name
     """
 
-    create_columns(username, selected_database, table_name)
+    new_table = TableModel.create(user=username, name=table_name)
+
+    create_columns(username, selected_database, new_table)
 
 
 def create_columns(username, selected_database, table):
@@ -339,6 +362,7 @@ def create_columns(username, selected_database, table):
     if field_primary_key == ord('n') and field_null == ord('y'):
         field_option = ''
 
+
     # for testing
     # screen.addstr(15, 5, field_option)
     # screen.refresh()
@@ -347,6 +371,10 @@ def create_columns(username, selected_database, table):
     HERE RUN THE ALTER TABLE COMMAND FOR THE DATABASE, WITH THE FOLLOWING FIELDS:
     field_name, field_type, field_option
     """
+    query = "ALTER TABLE %s ADD %s %s %s %s" % (field_name, field_type, field_primary_key, field_null, field_option)
+    conn = psql_db.connect()
+    cursor = conn.cursor()
+    cursor.execute(query)
 
     screen.addstr(17, 5, 'Do you have more columns to add? Enter Y or N: ')
     response = screen.getch()

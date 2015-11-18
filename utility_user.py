@@ -1,7 +1,7 @@
 from peewee import IntegrityError
 from model_user import UserModel
-
-
+from utility_database import connect_to_db
+from psycopg2.extensions import AsIs
 def validate_user(username, password):
     """
     :param username:
@@ -19,14 +19,24 @@ def validate_user(username, password):
     return None
 
 
-def add_user(username, password):
+def add_user(user, password):
     """
     :param username:
     :param password:
     :return:
     """
     try:
-        UserModel.create(username=username, password=password)
+        #add user to admin user table
+        UserModel.create(username=user, password=password)
+
+        # add user to psql
+        conn = connect_to_db('postgres', 'postgres')
+        cursor = conn.cursor()
+        add_query = "CREATE ROLE %s WITH CREATEDB LOGIN PASSWORD %s"
+        add_data = (AsIs(user), password)
+        cursor.execute(add_query, add_data)
+
+
     except IntegrityError:
         return False
 

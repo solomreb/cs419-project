@@ -1,9 +1,9 @@
 import datetime
 from peewee import CharField, DateTimeField
-from model_base import PostgresqlModel
+from model_base import AdminModel
 
 
-class UserModel(PostgresqlModel):
+class UserModel(AdminModel):
     class Meta:
         db_table = 'users'
 
