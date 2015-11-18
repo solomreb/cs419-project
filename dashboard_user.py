@@ -2,7 +2,7 @@ import curses
 import dashboard_program
 import dashboard_database
 from utility_user import add_user, validate_user
-
+import time
 
 def existing_user_view():
     """
@@ -34,8 +34,14 @@ def existing_user_view():
     user = validate_user(username, password)
 
     if user is not None:
+        screen.addstr(11, 5, 'Logging you in...')
+        screen.refresh()
+        time.sleep(2)
         dashboard_database.database_menu(user)
     else:
+        screen.addstr(11, 5, 'Invalid username/password. Try again...')
+        screen.refresh()
+        time.sleep(2)
         dashboard_program.main_menu()
 
 
@@ -61,10 +67,13 @@ def new_user_view():
     user_added = add_user(username, password)
 
     if user_added is True:
-        pass
-        # print "User added"
+        screen.addstr(11, 5, username + ' account created...')
+        screen.refresh()
+        time.sleep(2)
+        dashboard_database.database_menu()
     else:
-        pass
         # print "User already exists"
-
-    dashboard_program.main_menu()
+        screen.addstr(11, 5, 'Username ' + username + ' already exists...')
+        screen.refresh()
+        time.sleep(2)
+        dashboard_program.main_menu()

@@ -1,10 +1,10 @@
 import curses
 import dashboard_program
 from dashboard_table import table_menu
-from utility_database import add_database, connect_to_db
+from utility_database import add_database, display_databases
 import time
 from model_base import *
-
+from model_table import TableModel
 
 def database_menu(user):
     """
@@ -41,16 +41,16 @@ def database_menu(user):
             selection = option
 
         if selection == 0:
-            new_database_view(user)
+            new_database_view(user.username)
         elif selection == 1:
-            edit_database(user)
+            edit_database(user.username)
         elif selection == 2:
-            delete_database(user)
+            delete_database(user.username)
         elif selection == 3:
             dashboard_program.end_program()
 
 
-def new_database_view(user):
+def new_database_view(username):
     """
     User is taken here if they would like to create a new database
     It is passed the username, so that the database can be associated
@@ -68,18 +68,18 @@ def new_database_view(user):
     curses.echo()
     database_name = screen.getstr(6, 5, 15)
 
-    created = add_database(user, database_name)
+    created = add_database(username, database_name)
 
     if created:
         screen.addstr(8, 5, 'Database ' + database_name + ' created!...', curses.COLOR_GREEN)
         screen.refresh()
         time.sleep(2)
-        edit_selected_database_menu(user, database_name)
+        edit_selected_database_menu(username, database_name)
     else:
         screen.addstr(8, 5, 'That database name already exists. Refreshing screen...', curses.COLOR_RED)
         screen.refresh()
         time.sleep(2)
-        new_database_view(user)
+        new_database_view(username)
 
 
 def edit_selected_database_menu(user, database):
@@ -194,16 +194,11 @@ def edit_database(user):
     And put all the names as elements of 'databases' variable
     Also, query the count of databases and save that as 'databases_count'
     """
-    databases = ['name1', 'name2', 'name3', 'name4']
-    databases_count = 4
+    databases = display_databases(user)
 
-    #connect to default database
-    conn = connect_to_db('postgres', 'postgres')
-    cursor = conn.cursor()
 
-    # retreive database names for selected user
-    find_query = "SELECT 1 FROM pg_database WHERE datname = \'%s\'" % (database_name)
-    cursor.execute(find_query)
+    #databases = ['name1', 'name2', 'name3', 'name4']
+    #databases_count = 4
 
     selection = -1
     option = 0
@@ -213,11 +208,11 @@ def edit_database(user):
     while selection < 0:
         y = 5
         i = 0
-        choices = [0] * databases_count
+        choices = [0] * len(databases)
         choices[option] = curses.A_REVERSE
 
-        for name in databases:
-            screen.addstr(y, 5, name, choices[i])
+        for db_name in databases:
+            screen.addstr(y, 5, db_name[0], choices[i])
             i += 1
             y += 3
 
@@ -226,13 +221,13 @@ def edit_database(user):
         action = screen.getch()
 
         if action == curses.KEY_UP:
-            option = (option - 1) % databases_count
+            option = (option - 1) % len(databases)
         elif action == curses.KEY_DOWN:
-            option = (option + 1) % databases_count
+            option = (option + 1) % len(databases)
         elif action == ord('\n'):
             selection = option
 
-        selected_database = databases[selection]
+        selected_database = str(databases[selection])
 
     edit_selected_database_menu(user, selected_database)
 

@@ -2,6 +2,7 @@ from peewee import IntegrityError
 from model_user import UserModel
 from utility_database import connect_to_db
 from psycopg2.extensions import AsIs
+
 def validate_user(username, password):
     """
     :param username:

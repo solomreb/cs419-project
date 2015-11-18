@@ -32,10 +32,23 @@ def add_database(user, database_name):
 
         #change owner to user
         change_owner = "ALTER DATABASE %s OWNER TO %s"
-        data = (AsIs(database_name), AsIs(user.username))
+        data = (AsIs(database_name), AsIs(user))
         cursor.execute(change_owner, data)
         conn.close()
 
         #initialize psql_db
-        psql_db.init(database_name, user=user.username)
+        psql_db.init(database_name, user=user)
     return True
+
+def display_databases(user):
+    # connect to default postgres db to search dbs
+    conn = connect_to_db('postgres', 'postgres')
+    cursor = conn.cursor()
+
+    # check for duplicate database name
+    find_query = "SELECT datname FROM pg_catalog.pg_database d " \
+                 "WHERE pg_catalog.pg_get_userbyid(d.datdba) = (%s);"
+    data = (user,)
+    cursor.execute(find_query, data)
+    result = cursor.fetchall()
+    return result
