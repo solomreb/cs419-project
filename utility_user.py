@@ -11,6 +11,7 @@ def validate_user(username, password):
     """
     try:
         user = UserModel.get(UserModel.username == username)
+
     except UserModel.DoesNotExist:
         return None
 

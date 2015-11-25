@@ -37,7 +37,7 @@ def existing_user_view():
         screen.addstr(11, 5, 'Logging you in...')
         screen.refresh()
         time.sleep(2)
-        dashboard_database.database_menu(user)
+        dashboard_database.database_menu(username)
     else:
         screen.addstr(11, 5, 'Invalid username/password. Try again...')
         screen.refresh()
@@ -70,7 +70,7 @@ def new_user_view():
         screen.addstr(11, 5, username + ' account created...')
         screen.refresh()
         time.sleep(2)
-        dashboard_database.database_menu()
+        dashboard_database.database_menu(username)
     else:
         # print "User already exists"
         screen.addstr(11, 5, 'Username ' + username + ' already exists...')

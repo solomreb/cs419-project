@@ -1,12 +1,13 @@
 import curses
 import dashboard_program
+import dashboard_database
 from dashboard_table import table_menu
-from utility_database import add_database, display_databases
+from utility_database import add_database, connect_to_db
 import time
 from model_base import *
 from model_table import TableModel
 
-def database_menu(user):
+def database_menu(username):
     """
     Once a user is logged in, they are shown this screen
     It displays the options for them to do in regards to databases.
@@ -41,11 +42,11 @@ def database_menu(user):
             selection = option
 
         if selection == 0:
-            new_database_view(user.username)
+            new_database_view(username)
         elif selection == 1:
-            edit_database(user.username)
+            edit_database(username)
         elif selection == 2:
-            delete_database(user.username)
+            delete_database(username)
         elif selection == 3:
             dashboard_program.end_program()
 
@@ -82,7 +83,7 @@ def new_database_view(username):
         new_database_view(username)
 
 
-def edit_selected_database_menu(user, database):
+def edit_selected_database_menu(username, database):
     screen = curses.initscr()
     screen.clear()
     screen.keypad(1)
@@ -91,12 +92,13 @@ def edit_selected_database_menu(user, database):
     option = 0
 
     while selection < 0:
-        choices = [0] * 2
+        choices = [0] * 4
         choices[option] = curses.A_REVERSE
-        screen.addstr(3, 5, 'DATABASE: ' + database, curses.A_BOLD | curses.A_UNDERLINE)
+        screen.addstr(1, 1, 'BACK TO MAIN MENU', curses.A_UNDERLINE | choices[0])
+        screen.addstr(3, 5, database, curses.A_BOLD | curses.A_UNDERLINE)
         screen.addstr(5, 5, 'What would you like to do in this database?', curses.A_BOLD | curses.A_UNDERLINE)
-        screen.addstr(8, 5, 'Edit/View an Existing Table', choices[0])
-        screen.addstr(11, 5, 'Create a New Table', choices[1])
+        screen.addstr(8, 5, 'Edit/View an Existing Table', choices[1])
+        screen.addstr(11, 5, 'Create a New Table', choices[2])
 
         screen.refresh()
 
@@ -110,12 +112,14 @@ def edit_selected_database_menu(user, database):
             selection = option
 
         if selection == 0:
-            edit_table_view_selected_database(user, database)
+            dashboard_database.database_menu(username)
         elif selection == 1:
-            create_new_table(user, database)
+            edit_table_view_selected_database(username, database)
+        elif selection == 2:
+            create_new_table(username, database)
 
 
-def edit_table_view_selected_database(user, database):
+def edit_table_view_selected_database(username, database):
     """
     This is a poorly named function
     User is brought here if they selected that they wanted to edit an existing database
@@ -141,6 +145,7 @@ def edit_table_view_selected_database(user, database):
     selection = -1
     option = 0
 
+
     screen.addstr(3, 5, 'Choose a table to edit/view', curses.A_BOLD | curses.A_UNDERLINE)
 
     selected_table = None
@@ -148,8 +153,10 @@ def edit_table_view_selected_database(user, database):
     while selection < 0:
         y = 5
         i = 0
-        choices = [0] * tables_count
+        choices = [0] * (tables_count + 1)
         choices[option] = curses.A_REVERSE
+
+        screen.addstr(1, 1, 'BACK TO MAIN MENU', curses.A_UNDERLINE | choices[0])
 
         for name in tables:
             screen.addstr(y, 5, name, choices[i])
@@ -167,12 +174,15 @@ def edit_table_view_selected_database(user, database):
         elif action == ord('\n'):
             selection = option
 
+        if selection == 0:
+            dashboard_database.database_menu(username)
+
         selected_table = tables[selection]
 
-    table_menu(user, database, selected_table)
+    table_menu(username, database, selected_table)
 
 
-def edit_database(user):
+def edit_database(username):
     """
     User is taken here if they would like to edit an existing database
     All of the databases that are associated with the user's username
@@ -180,7 +190,7 @@ def edit_database(user):
     they would like to edit
     The database that they select is sent to edit_selected_database_menu()
     the username and database name are sent
-    :param user:
+    :param username:
     :return:
     """
     screen = curses.initscr()
@@ -194,11 +204,21 @@ def edit_database(user):
     And put all the names as elements of 'databases' variable
     Also, query the count of databases and save that as 'databases_count'
     """
-    databases = display_databases(user)
+    #databases = display_databases(username)
+    conn = connect_to_db('postgres', 'postgres')
+    cursor = conn.cursor()
 
+    # check for duplicate database name
+    find_query = "SELECT datname FROM pg_catalog.pg_database d WHERE pg_catalog.pg_get_userbyid(d.datdba) = %s;"
 
-    #databases = ['name1', 'name2', 'name3', 'name4']
-    #databases_count = 4
+    cursor.execute(find_query, (username,))
+
+    length = cursor.rowcount
+
+    databases = []
+    for db_name in cursor:
+        databases.append(db_name[0])
+
 
     selection = -1
     option = 0
@@ -206,13 +226,17 @@ def edit_database(user):
     selected_database = None
 
     while selection < 0:
-        y = 5
-        i = 0
-        choices = [0] * len(databases)
+
+        choices = [0] * (length + 1)
         choices[option] = curses.A_REVERSE
 
-        for db_name in databases:
-            screen.addstr(y, 5, db_name[0], choices[i])
+        screen.addstr(1, 1, 'BACK TO MAIN MENU', choices[0])
+        screen.addstr(1, 23, 'length: ' + str(length))
+        y = 5
+        i = 1
+
+        for db in databases:
+            screen.addstr(y, 5, db, choices[i])
             i += 1
             y += 3
 
@@ -221,18 +245,26 @@ def edit_database(user):
         action = screen.getch()
 
         if action == curses.KEY_UP:
-            option = (option - 1) % len(databases)
+            option = (option - 1) % (length + 1)
         elif action == curses.KEY_DOWN:
-            option = (option + 1) % len(databases)
+            option = (option + 1) % (length + 1)
         elif action == ord('\n'):
             selection = option
 
-        selected_database = str(databases[selection])
+        screen.addstr(19, 5, 'option: ' + str(option))
+        screen.addstr(20, 5, 'selection: ' + str(selection))
+        screen.refresh()
 
-    edit_selected_database_menu(user, selected_database)
+        if selection == 0:
+            dashboard_database.database_menu(username)
+
+        selected_database = databases[selection]
 
 
-def delete_database(user):
+    edit_selected_database_menu(username, selected_database)
+
+
+def delete_database(username):
     """User is brought here if they have chosen to delete a database.
     First, all databases are shown, and then the user selects one to delete.
     The user is asked to verify they would like to delete the database."""
@@ -291,6 +323,7 @@ def delete_database(user):
         screen.addstr(11, 5, 'Yes', choices[0])
         screen.addstr(14, 5, 'No', choices[1])
 
+
         screen.refresh()
 
         action = screen.getch()
@@ -304,9 +337,9 @@ def delete_database(user):
 
         if selection == 0:
             """Database query goes here to delete the database"""
-            database_menu(user)
+            database_menu(username)
         elif selection == 1:
-            database_menu(user)
+            database_menu(username)
 
 
 def create_new_table(username, selected_database):
