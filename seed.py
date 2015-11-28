@@ -1,4 +1,5 @@
-from model_user import UserModel
+from model_user import AdminUserModel
+from model_database import AdminDatabaseModel
 from peewee import IntegrityError
 
 if __name__ == "__main__":
@@ -39,5 +40,7 @@ if __name__ == "__main__":
 
     for user in users:
         try:
-            user_created = UserModel.create(username=user['username'], password=user['password'])        except IntegrityError:
+            user_created = AdminUserModel.create(username=user['username'], password=user['password'])
+            database = AdminDatabaseModel.create(user=user_created, name=user['database_name'])
+        except IntegrityError:
             print "User already exists!"

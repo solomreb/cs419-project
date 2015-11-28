@@ -1,5 +1,5 @@
 from peewee import IntegrityError
-from model_user import UserModel
+from model_user import AdminUserModel
 from utility_database import connect_to_db
 from psycopg2.extensions import AsIs
 
@@ -10,9 +10,9 @@ def validate_user(username, password):
     :return:
     """
     try:
-        user = UserModel.get(UserModel.username == username)
+        user = AdminUserModel.get(AdminUserModel.username == username)
 
-    except UserModel.DoesNotExist:
+    except AdminUserModel.DoesNotExist:
         return None
 
     if user.password == password:
@@ -29,7 +29,7 @@ def add_user(user, password):
     """
     try:
         #add user to admin user table
-        UserModel.create(username=user, password=password)
+        #AdminUserModel.create(username=user, password=password)
 
         # add user to psql
         conn = connect_to_db('postgres', 'postgres')
@@ -38,7 +38,6 @@ def add_user(user, password):
         add_data = (AsIs(user), password)
         cursor.execute(add_query, add_data)
 
-
     except IntegrityError:
         return False
 
@@ -46,5 +45,5 @@ def add_user(user, password):
 
 
 def display_users():
-    for user in UserModel.select():
+    for user in AdminUserModel.select():
         print user.username, user.password

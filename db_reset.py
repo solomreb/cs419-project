@@ -1,15 +1,15 @@
-from model_column import ColumnModel
-from model_table import TableModel
-from model_user import UserModel
+from model_column import AdminColumnModel
+from model_table import AdminTableModel
+from model_user import AdminUserModel
 from peewee import PostgresqlDatabase
 
 if __name__ == "__main__":
     database = PostgresqlDatabase('cs419', user='vagrant')
 
     tables = [
-        ColumnModel,
-        TableModel,
-        UserModel
+        AdminColumnModel,
+        AdminTableModel,
+        AdminUserModel
     ]
 
     database.drop_tables(tables, safe=True, cascade=True)

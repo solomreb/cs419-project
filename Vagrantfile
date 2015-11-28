@@ -18,7 +18,10 @@ Vagrant.configure(2) do |config|
 
     sudo apt-get install -y postgresql postgresql-contrib postgresql-client libpq-dev
     sudo sed -i "s/#listen_address.*/listen_addresses '*'/" /etc/postgresql/9.3/main/postgresql.conf
+
     sudo cp /home/vagrant/cs419-project/vagrant_files/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+
+    sudo echo 'host    all             postgres        127.0.0.1/32            trust' >> /etc/postgresql/9.3/main/pg_hba.conf
 
     sudo service postgresql restart
 

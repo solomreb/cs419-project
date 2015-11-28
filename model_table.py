@@ -11,6 +11,7 @@ class TableModel(PostgresqlModel):
     name = CharField()
     created_date = DateTimeField(default=datetime.datetime.now)
 
+
 class AdminTableModel(AdminModel):
     class Meta:
         db_table = 'tables'
