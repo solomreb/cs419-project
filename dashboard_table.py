@@ -400,12 +400,14 @@ def query_table_pagination(columns, rows, beg, end, count):
     y=4
 
     #print rows from beg - end
-    for (i = beg; i <= safe_end; i++):
+    i = beg
+    while i <= safe_end:
         for result in row[i]:
             screen.addstr(y, x, result)
             x += 15
         y += 1  # move to next line
         x = 2  # reset x
+        i += 1
 
     #print previous and next buttons
     selection = -1
